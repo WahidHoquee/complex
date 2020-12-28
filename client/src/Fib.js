@@ -8,11 +8,11 @@ const Fib = () => {
 
   const fetchValues = async() => {
     const values = await axios.get('/api/values/current');
-    setValues(values);
+    setValues(values.data);
   }
   const fetchIndex = async() => {
     const indexes = await axios.get('/api/values/all');
-    setSeenIndexes(indexes)
+    setSeenIndexes(indexes.data)
   }
   useEffect( () => {
     fetchValues();

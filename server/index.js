@@ -18,7 +18,7 @@ const pgClient = new Pool({
   user: keys.pgUser,
   host: keys.pgHost,
   database: keys.pgDatabase,
-  password: keys.pgPassword,
+  // password: keys.pgPassword,
   port: keys.pgPort,
 });
 
@@ -27,7 +27,7 @@ pgClient
   .on("error", () => console.log("Lost PG Connection"));
 
 pgClient
-  .query("CREATE TABLE IF NOT EXISTS values ( number INT)")
+  .query('CREATE TABLE IF NOT EXISTS values (number INT)')
   .catch((err) => console.log(err));
 
 
@@ -40,7 +40,7 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000
 })
 
-const redisPublisher
+const redisPublisher =  redisClient.duplicate();
 
 
 //Express Route Handler
@@ -51,18 +51,25 @@ app.get('/', (req, res) => {
 
 //To fetch all indices from Postgres
 app.get('/values/all', async(req, res) => {
-  const values = await pgClient.query('SELECT * FROM values');
+  console.log('*******************************')
 
+  const values = await pgClient.query('SELECT * FROM values');
+  console.log('*******************************')
+  console.log('*******************************')
+  console.log('')
+  console.log(values.rows)
+  console.log('')
+  console.log('*******************************')
+  console.log('*******************************')
+  console.log('*******************************')
   res.send(values.rows)
 })
-
+console.log('objecssssssst')
 //To fetch all calculated values with indices & its calculated values from redis
 app.get('/values/current', async(req, res) => {
   redisClient.hgetall('values', (err, values) => {
     res.send(values)
   })
-
-  res.send(values.rows)
 })
 
 
